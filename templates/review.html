@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block title %}Flash Cards : Review{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style>
+    .card {
+        margin: 0 auto; /* Added */
+        float: none; /* Added */
+        margin-bottom: 10px; /* Added */
+}
+  </style>
+  <script>
+    function flip(){
+      document.getElementById("back_content").innerHTML = "{{card.back_content}}";
+      //score
+      if (document.getElementById("score_changed").value=="0") {
+        var score=parseInt(document.getElementById("score_span").innerHTML);
+        score=score-1;
+        document.getElementById("score_span").innerHTML=score.toString()
+        document.getElementById("deck_score").value=score.toString()
+        document.getElementById("score_changed").value="1"
+      }
+      
+    }
+  </script>
+{% endblock %}
+{% block review %}active{%endblock%}
+{% block page %}
+
+
+<h3 style="padding:10px">{{deck['name']}} Deck ({{deck['no_cards']}} cards)</h3>
+<hr>
+
+
+<div class="container-fluid text_center">
+
+  <div class="card border-success mb-3" style="max-width: 18rem;">
+    <div class="card-header bg-transparent border-success">
+      <div class="container-fluid text-center">
+      <button type="button" class="btn btn-primary" onClick="flip()">FLIP</button>
+      </div>
+    </div>
+    <div class="card-body text-success">
+      <h5 class="card-title">{{card.front_content}}</h5>
+      <p class="card-text" id="back_content">Do you know it?</p>
+    </div>
+    <div class="card-footer bg-transparent border-success  text-center">
+      <form method="POST" action="/review">
+        <input type="hidden" id="deck_id" name="deck_id" value="{{deck['id']}}">
+        <input type="hidden" id="deck_score" name="deck_score" value="{{deck['deck_score']}}">
+        <input type="hidden" id="current_card" name="current_card" value="{{deck['current_card']}}">
+        <input type="hidden" id="no_cards" name="no_cards" value="{{deck['no_cards']}}">
+        {% for i in deck['completed_cards'] %}
+        <input type="hidden" id="completed_cards" name="completed_cards" value="{{i}}">
+        {% endfor %}
+        {% for i in deck['remaining_cards'] %}
+        <input type="hidden" id="remaining_cards" name="remaining_cards" value="{{i}}">
+        {% endfor %}
+
+      <button type="submit" class="btn btn-success" name="submit" value="1">Easy</button>
+      <button type="submit" class="btn btn-warning" name="submit" value="2">Medium</button>
+      <button type="submit" class="btn btn-danger" name="submit" value="3">Hard</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="progress">
+    <div class="progress-bar" role="progressbar" style="width: {{((deck['completed_cards']|length)*100/(deck['no_cards']))|round|int}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{(deck['completed_cards']|length)}}/{{(deck['no_cards'])}}</div>
+  </div>
+
+  <h6><span class="badge bg-secondary">SCORE ::</span> <span class="badge bg-secondary" id="score_span">{{deck['deck_score']}}</span></h6>
+  <br/>
+  <footer class="blockquote-footer"> Your score comes down for every flip. No going back : Finish the whole deck and review again if needed.</footer>
+   <footer class="blockquote-footer"> Select Easy / Medium / Hard to proceed to the next card in the Deck</footer>
+  <input type="hidden" id="score_changed" name="score_changed" value="0">
+
+</div>
+
+{% endblock %}

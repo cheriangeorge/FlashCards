@@ -1,0 +1,838 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a simple Flash Card App API. It performs CRUD on individual cards and individual decks. It also provides api endpoints to retreive score for a given user for a specified deck.",
+    "version": "1.0.0",
+    "title": "Flash Cards"
+  },
+  "host": "flashcards-v12.constitution.repl.co",
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "card",
+      "description": "Everything about your Cards"
+    },
+    {
+      "name": "deck",
+      "description": "Everything about your Decks"
+    },
+    {
+      "name": "user",
+      "description": "Cards and Decks belong to existing users. So POST operations on cards and decks are performed from here"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/card/{card_id}": {
+      "get": {
+        "tags": [
+          "card"
+        ],
+        "summary": "Get card by card_id",
+        "description": "",
+        "operationId": "getCardById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "card_id",
+            "in": "path",
+            "description": "The id that needs to be fetched.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Card_out"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "ID not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "card"
+        ],
+        "summary": "Update an existing card",
+        "description": "",
+        "operationId": "updateCard",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "card_id",
+            "in": "path",
+            "description": "The id that needs to be fetched.",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Card object that needs to be added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Card_in"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated",
+            "schema": {
+              "$ref": "#/definitions/Card_out"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Card with given ID not found"
+          },
+          "405": {
+            "description": "Validation Exceptions\nCARD_ERROR_001 : Card Name is required and should be a non-empty string.\nCARD_ERROR_002 : Front Content is required and should be a non-empty string.\nCARD_ERROR_003 : Back Content is required and should be a non-empty string.\nCARD_ERROR_004 : Category should be a  string. "
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "card"
+        ],
+        "summary": "Delete card by card_id",
+        "description": "",
+        "operationId": "deleteCardById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "card_id",
+            "in": "path",
+            "description": "The id that needs to be deleted.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully deleted"
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "ID not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/card": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Add a new card belonging to an existing user",
+        "description": "",
+        "operationId": "addCard",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "The user_id that owns the card to be created.",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Card that needs to be added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Card_in"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/deck/{deck_id}": {
+      "get": {
+        "tags": [
+          "deck"
+        ],
+        "summary": "Get Deck Information",
+        "description": "",
+        "operationId": "getDeckById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "deck_id",
+            "in": "path",
+            "description": "The id that needs to be fetched.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully fectched",
+            "schema": {
+              "$ref": "#/definitions/Deck_out"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "ID not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "deck"
+        ],
+        "summary": "Update an existing deck",
+        "description": "",
+        "operationId": "updateDeck",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "deck_id",
+            "in": "path",
+            "description": "The id that needs to be updated.",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Deck object that needs to be added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Deck_in"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deck updated",
+            "schema": {
+              "$ref": "#/definitions/Deck_out"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Deck not found"
+          },
+          "405": {
+            "description": "Validation exceptions\nDECK_ERROR_001 : Deck Name is required and should be a non-empty string.\nDECK_ERROR_002 : Subtitle is required and should be a non-empty string.\nDECK_ERROR_003 : Summary is required and should be a non-empty string.\n"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "deck"
+        ],
+        "summary": "Delete deck by deck_id.",
+        "description": "Deleting a deck does not delete its associated cards",
+        "operationId": "deleteDeckById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "deck_id",
+            "in": "path",
+            "description": "The id that needs to be deleted.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully deleted"
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "ID not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/deck": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Add a new deck belonging to an existing user",
+        "description": "",
+        "operationId": "addDeck",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "The user_id that owns the deck to be created.",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Deck that needs to be added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Deck_in"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/deck/{deck_id}/cards": {
+      "get": {
+        "tags": [
+          "deck"
+        ],
+        "summary": "Get all the cards in a deck",
+        "description": "",
+        "operationId": "getCardsfromDeckById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "deck_id",
+            "in": "path",
+            "description": "The deck id whose cards need to be fetched.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully fectched",
+            "schema": {
+              "$ref": "#/definitions/Card_out"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "ID not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/cards": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get all the cards belonging to a user",
+        "description": "",
+        "operationId": "getCardsByUserId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "The user id whose cards need to be fetched.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully fectched",
+            "schema": {
+              "$ref": "#/definitions/Card_out"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "ID not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/decks": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get all the decks belonging to a user",
+        "description": "",
+        "operationId": "getDecksByUserId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "The user id whose decks need to be fetched.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully fectched",
+            "schema": {
+              "$ref": "#/definitions/Deck_out"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "ID not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/{user_id}/deck/{deck_id}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get the deck score for deck_id reviewed by user with user_id",
+        "description": "",
+        "operationId": "getDeckScoreByUserId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "The user id whose deck Score needs to be fetched.",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "deck_id",
+            "in": "path",
+            "description": "The Deck for which the Score needs to be fetched.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully fectched",
+            "schema": {
+              "$ref": "#/definitions/Score_out"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "ID not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "createUser",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User_in"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully created user",
+            "schema": {
+              "$ref": "#/definitions/User_out"
+            }
+          },
+          "405": {
+            "description": "Validation Exceptions\nUSER_ERROR_001 : Username is required and should be a non-empty string.\nUSER_ERROR_002 : Password is required and should be a non-empty string.\nUSER_ERROR_003 : The provided username already exists. Please choose another one. "
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Card_in": {
+      "type": "object",
+      "required": [
+        "card_name",
+        "front_content",
+        "back_content",
+        "category"
+      ],
+      "properties": {
+        "card_name": {
+          "type": "string"
+        },
+        "front_content": {
+          "type": "string"
+        },
+        "back_content": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Card_in"
+      }
+    },
+    "Card_out": {
+      "type": "object",
+      "required": [
+        "card_name",
+        "front_content",
+        "back_content",
+        "owner"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "card_name": {
+          "type": "string"
+        },
+        "front_content": {
+          "type": "string"
+        },
+        "back_content": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "xml": {
+        "name": "Card_out"
+      }
+    },
+    "Deck_in": {
+      "type": "object",
+      "required": [
+        "deck_name",
+        "subtitle",
+        "summary"
+      ],
+      "properties": {
+        "deck_name": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Deck_in"
+      }
+    },
+    "Deck_out": {
+      "type": "object",
+      "required": [
+        "deck_name",
+        "subtitle",
+        "summary",
+        "owner"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "deck_name": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "xml": {
+        "name": "Deck_out"
+      }
+    },
+    "User_in": {
+      "type": "object",
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "User_in"
+      }
+    },
+    "User_out": {
+      "type": "object",
+      "required": [
+        "username",
+        "password"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "User_out"
+      }
+    },
+    "CardDeckRelation": {
+      "type": "object",
+      "required": [
+        "card_id",
+        "deck_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "card_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "deck_id": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "xml": {
+        "name": "CardDeckRelation"
+      }
+    },
+    "UserCardRelation": {
+      "type": "object",
+      "required": [
+        "card_id",
+        "user_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "card_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last_reviewed": {
+          "type": "string",
+          "format": "Date"
+        },
+        "difficulty_level": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Easy:1 / Medium:2 / Difficult:3",
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "xml": {
+        "name": "UserCardRelation"
+      }
+    },
+    "UserDeckRelation": {
+      "type": "object",
+      "required": [
+        "user_id",
+        "deck_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "deck_id": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "score": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last_reviewed": {
+          "type": "string",
+          "format": "DateTime"
+        }
+      },
+      "xml": {
+        "name": "UserDeckRelation"
+      }
+    },
+    "Score_out": {
+      "type": "object",
+      "required": [
+        "user_id",
+        "deck_id",
+        "score",
+        "last_reviewed"
+      ],
+      "properties": {
+        "deck_id": {
+          "type": "integer"
+        },
+        "user_id": {
+          "type": "integer"
+        },
+        "score": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "last_reviewed": {
+          "type": "string",
+          "format": "DateTime"
+        }
+      },
+      "xml": {
+        "name": "Score_out"
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Flash Card App",
+    "url": "https://flashcards-v12.constitution.repl.co/"
+  }
+}

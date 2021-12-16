@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block title %}Flash Cards : View Decks{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block deckmanagement %}active{%endblock%}
+{% block page %}
+
+
+<div class="container">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#">View My Decks</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/deck_management/view_cards">View My Cards</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/deck_management/create_card">Create Card</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/deck_management/create_deck">Create Deck</a>
+      </li>
+    </ul>
+</div>
+
+<div class="container" style="min-width:600px">
+  <form method="POST" action="/deck_management">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Deck Name</th>
+          <th scope="col">Subtitle</th>
+          <th scope="col">Summary</th>
+          <th scope="col">No. of Cards</th>
+          <th scope="col">Score</th>
+          <th scope="col">Last Reviewed</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if decks|length > 0 %}
+        {% for i in decks %}
+        <tr>
+          <th scope="row">{{loop.index}}</th>
+          <td>{{i.deck_name}}</td>
+          <td>{{i.subtitle}}</td>
+          <td>{{i.summary}}</td>
+          <td>{{deck_info[i.id]['no_cards']}}</td>
+          <td>{{deck_info[i.id]['score']}}            
+          </td>
+          <td>{{deck_info[i.id]['last_reviewed']}}</td>
+          <td>
+            {% if i.owner==username %}
+            <button type="submit" class="btn btn-primary btn-sm" value="{{"edit_"+i.id|string}}" name="submit">Edit</button>
+            {% endif %}
+          </td>
+          <td>
+            {% if i.owner==username %}
+            <button type="submit" class="btn btn-primary btn-sm" value="{{"delete_"+i.id|string}}" name="submit">Delete</button>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+
+        
+
+      </tbody>
+    </table>
+  </form>
+  
+</div>
+<div class="container" style="width:300px">
+  {% if message|length>0 %}
+  <p>
+    {{message}}
+  </p>
+  {% endif %}
+</div>
+
+{% endblock %}
+{% block footer %}
+  <footer class="blockquote-footer"> Deleting a deck will not delete the cards in the deck.</footer>
+{% endblock %}

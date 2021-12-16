@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block title %}Flash Cards : Dashboard{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block dashboard %}active{%endblock%}
+{% block page %}
+
+<h3 style="padding:10px">Decks</h3>
+<hr>
+
+<div class="container-fluid">
+  <div class="row">
+  {% for i in decks%}
+
+    <div class="col-sm-4" style="min-width:23rem;">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{i.deck_name}}</h5>
+          <h6 class="card-subtitle mb-2 text-muted"> {{i.subtitle}}</h6>
+          <p class="card-text">{{i.summary}}</p>
+          {% if i.owner == username %}
+          <p class="card-text text-danger"><i>{{i.owner}}</i></p>
+          {% endif %}
+          {% if i.owner != username %}
+          <p class="card-text text-muted">{{i.owner}}</p>
+          {% endif %}
+
+          <p class="card-text">Easy:{{deck_info[i.id]['e']}} | Medium:{{deck_info[i.id]['m']}} | Difficult: {{deck_info[i.id]['d']}}</p>
+
+          <p class="card-text">Last Reviewed : {{deck_info[i.id]['last_reviewed']}}</p>
+          <form method="POST" action="/review">
+           <input type="hidden" id="deck_id" name="deck_id" value="{{i.id}}">
+          <a href="#" class="card-link" onclick="this.closest('form').submit();return false;">Review</a>
+          <span href="#" class="card-link">Score : {{deck_info[i.id]['score']}}</span>
+          <span href="#" class="card-link">Cards : {{deck_info[i.id]['no_cards']}}</span>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+ 
+  {% endfor %}
+  </div>
+</div>
+<br/>
+
+{% endblock %}
+
+{% block footer %}
+<footer class="blockquote-footer"> Decks of all users with at least one card are displayed in the dashboard. You can practice anyone's decks</footer>
+  
+<footer class="blockquote-footer"><a class="label label-info" href="/about" role="button">Click here</a> for more information about the application</footer>
+<footer class="blockquote-footer"><a class="label label-info" href="/apidoc" role="button">Click here</a> for the REST API documentation</footer>
+{% endblock %}
+

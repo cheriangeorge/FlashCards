@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+{% block title %}Flash Cards : View Cards{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block deckmanagement %}active{%endblock%}
+{% block page %}
+
+
+<div class="container">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="/deck_management">View My Decks</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="#">View My Cards</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/deck_management/create_card">Create Card</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/deck_management/create_deck">Create Deck</a>
+      </li>
+    </ul>
+</div>
+
+<div class="container" style="min-width:600px">
+  <form method="POST" action="/deck_management/view_cards">
+    <table class="table" id="card_table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Card Name</th>
+          <th scope="col">Front</th>
+          <th scope="col">Back</th>
+          <th scope="col">Category</th>
+          <th scope="col">Decks</th>
+          <th scope="col">Select</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if cards|length > 0 %}
+        {% for i in cards %}
+        <tr>
+          <th scope="row">{{loop.index}}</th>
+          <td>{{i.card_name}}</td>
+          <td>{{i.front_content}}</td>
+          <td>{{i.back_content}}</td>
+          <td>{{i.category}}</td>
+          <td>
+            {% if card_deck[i.id]|length>0 %}
+                <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                  {% for j in card_deck[i.id] %}
+                  <option>{{ deck_dict[j] }}</option>
+                  {% endfor %}
+                </select>
+             {% endif %}                
+          </td>
+          <td><input class="form-check-input" type="checkbox" value="{{i.id}}" id="flexCheckDefault" name="selected"></td>
+          <td>
+            {% if i.owner==username %}
+            <button type="submit" class="btn btn-primary btn-sm" value="{{"edit_"+i.id|string}}" name="submit">Edit</button>
+            {% endif %}
+          </td>
+          <td>
+            {% if i.owner==username %}
+            <button type="submit" class="btn btn-primary btn-sm" value="{{"delete_"+i.id|string}}" name="submit">Delete</button>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+
+        
+        {% if decks|length>0 %}
+        <tr>
+          <th scope="row">.</th>
+          <td colspan="6">
+            Add selected cards to deck : 
+            <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="selected_deck">
+            {% for i in decks%}
+              <option value="{{i.id}}">{{i.deck_name}}</option>
+            {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-primary btn-sm" value="add_to_deck" name="submit">Add to deck</button>
+          </td>
+          <td>
+            .
+          </td>
+          <td>
+            .
+          </td>
+        </tr>
+        {% endif %}
+
+
+      </tbody>
+    </table>
+  </form>
+  
+</div>
+<div class="container" style="width:300px">
+  {% if message|length>0 %}
+  <p>
+    {{message}}
+  </p>
+  {% endif %}
+</div>
+{% endblock %}
+{% block footer %}
+ <footer class="blockquote-footer"> A card can be in multiple decks. Click the drop-down in the decks column to see the decks that a card is present in.</footer>
+{% endblock %}

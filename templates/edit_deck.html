@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block title %}Flash Cards : Edit Deck{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block deckmanagement %}active{%endblock%}
+{% block page %}
+
+
+<div class="container">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="/deck_management">View My Decks</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/deck_management/view_cards">View My Cards</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/deck_management/create_card">Create Card</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/deck_management/create_deck">Create Deck</a>
+      </li>
+    </ul>
+</div>
+
+<h3 style="padding:10px">Edit Deck</h3>
+<hr>
+
+<div class="container" style="width:300px">
+  <form method="POST" action="/deck_management">
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon1">Deck Name</span>
+    <input type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon1" name="name" value="{{deck.deck_name}}" maxlength="30" required>
+    <input type="hidden" name="id" value="{{deck.id}}" required>
+  </div>
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon2">Subtitle</span>
+    <input type="text" class="form-control" placeholder="Subtitle" aria-label="Subtitle" aria-describedby="basic-addon2" name="subtitle" value="{{deck.subtitle}}" maxlength="30" required>
+  </div>
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon3">Summary</span>
+    <input type="text" class="form-control" placeholder="Summary" aria-label="Summary" aria-describedby="basic-addon3" name="summary" value="{{deck.summary}}" maxlength="30" required>
+  </div>
+  <button type="submit" class="btn btn-primary" value="save_edit" name="submit">Save</button>
+  </form>
+</div>
+
+<div class="container" style="width:300px">
+  {% if message|length>0 %}
+  <p>
+    {{message}}
+  </p>
+  {% endif %}
+</div>
+
+{% endblock %}

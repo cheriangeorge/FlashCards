@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block title %}Flash Cards : About{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block page %}
+<h3 style="padding:10px">About the Flash Cards App</h3>
+<hr>
+
+<div class="container-fluid">
+  <h4>The model - Schema</h4>
+  <div class="col-xs-6 col-md-3">
+    <a href="#" class="thumbnail">
+      <img src='{{ url_for('static',filename='Model.png') }}'/>
+    </a>
+  </div>
+  <p>The above image of the database schema was made using creately.com. Some modifications have been made to the actual schema in the course of development.</p>
+    <p>
+    <h4>What the app does</h4>
+    <ul>
+      <li>A simple flash card app. A user can review the decks and cards existing in the system, created by other users or create own cards and decks.</li>
+      <li>A user can play the decks of other users as well. The user's deck score and card difficulty level will get recorded in the relationship tables.</li>
+      <li>A user can create his/her own cards and assign those cards to a deck. These can be reviewed by other users too.</li>
+      <li>The deck score and last-reviewed date will get updated in the user-deck relationship table only when the user completes reviewing all the cards in that deck.</li>
+      <li>Every time the user clicks on Easy/Medium/Hard on the card the last-reviewed attribute and difficulty level of the card for the particular user get updated in the user-card relationship table.</li>
+      <li>In the 'View My Cards' tab a user can also edit and delete his/her cards. In the edit secion the user can also remove a card from a particluar deck.</li>
+    </ul>
+  </p>
+  <p>
+    <h4>What the app lacks</h4>
+    <ul>
+      <li>Not very secure - password stored and transmitted in plaintext. (Could use MD5/SHA)</li>
+      <li>No option to register new user. Can be done through REST API though.</li>
+      <li>Performance - i) All reviews have full-page reloads equal to number of cards in a deck. ii) Some pages are populated with multiple database queries. eg : dashboards page has 2 nested loops running sql queries to get number of E/M/H cards in each deck.</li>
+      <li>No pagination implemented - If number of cards/decks get too big it would lead to a long scroll (Could use Material Design Bootstrap Datatables for pagination and sort functionality)</li>
+      <li>All cards and decks have to be created on the app or the REST API. No feature added to import/export cards as csv.</li>
+      <li>REST API : No authorization tokens implemented. Anyone who knows the endpoints can spam the database</li>
+    </ul>
+  </p>
+  <p>
+    <h4>Code Pitfalls</h4>
+    <ul>
+      <li>Flask SQL Alchemy : The many-to-many relation between cards and decks should ideally not use db.model but db.table (<a href="https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/#many-to-many-relationships">More Info</a>)</li>
+      <li>Flask SQL Alchemy : The use of cascade="all,delete" could have avoided additional SQL executions to delete from relations. However SQLite by default does not enforce ForeignKey constraints (<a href="https://stackoverflow.com/questions/31794195/how-to-correctly-add-foreign-key-constraints-to-sqlite-db-using-sqlalchemy">More Info</a>)</li>
+    </ul>
+  </p>
+  <p>
+    <h4>Complexity Notifications</h4>
+    <ul>
+      <li>O(n²) - A nested loop to fetch the number of easy/medium/hard cards for each deck in the dashboard. </li>
+    </ul>
+  </p>
+  <p>
+    <h4>Acknowledgments</h4>
+    <ul>
+      <li>Abhishek (MAD1-instructor) - for reviewing my code on several occassions and providing feedback for improvement.</li>
+      <li>Kumar Chandan (MAD1-learner) - for suggesting more optimized alternatives.</li>
+    </ul>
+  </p>
+{% endblock %}
+{% block footer %}
+<footer class="blockquote-footer"> About the app</footer>
+{% endblock %}
